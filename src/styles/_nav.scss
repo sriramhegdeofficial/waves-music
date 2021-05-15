@@ -12,10 +12,20 @@ nav {
     transition: all 0.3s ease;
     -webkit-tap-highlight-color: transparent;
     -moz-tap-highlight-color: transparent;
-    tap-highlight-color: transparent;
-    &:hover {
-      background: rgb(65, 65, 65);
-      color: white;
+
+    @media handheld {
+      &:hover {
+        background: none;
+        color: black;
+        border: 2px solid rgb(65, 65, 65);
+      }
+    }
+
+    @media screen and (min-width: 800px) {
+      &:hover {
+        background: rgb(65, 65, 65);
+        color: white;
+      }
     }
   }
 }
