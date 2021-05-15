@@ -39,7 +39,7 @@ const LibrarySong = ({
     setSongs(newSongs);
   };
 
-  React.useEffect(() => {
+  const playAudioCallback = React.useCallback(() => {
     if (initRender.current) {
       initRender.current = false;
     } else {
@@ -47,13 +47,16 @@ const LibrarySong = ({
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise.then((audio) => {
-          audioRef.current.pause();
           audioRef.current.play();
           setIsPlaying(true);
         });
       }
     }
-  }, [currentSong]);
+  });
+
+  React.useEffect(() => {
+    playAudioCallback();
+  }, [playAudioCallback]);
 
   return (
     <div

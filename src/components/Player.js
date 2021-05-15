@@ -90,7 +90,7 @@ const Player = ({
     }
   };
 
-  React.useEffect(() => {
+  const playAudioCallback = React.useCallback(() => {
     if (initRender.current) {
       initRender.current = false;
     } else {
@@ -125,7 +125,11 @@ const Player = ({
 
       setSongs(newSongs);
     }
-  }, [currentSong, audioRef]);
+  });
+
+  React.useEffect(() => {
+    playAudioCallback();
+  }, [playAudioCallback]);
 
   const trackAnim = {
     transform: `translateX(${songInfo.animationPercentage}%)`,
