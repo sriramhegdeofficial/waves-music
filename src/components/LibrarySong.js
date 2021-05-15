@@ -10,6 +10,7 @@ const LibrarySong = ({
   setSongs,
 }) => {
   const [hovered, setHovered] = React.useState(false);
+  const initRender = React.useRef(true);
   const hoverHandler = () => {
     if (song.active) {
       return;
@@ -39,12 +40,18 @@ const LibrarySong = ({
   };
 
   React.useEffect(() => {
-    const playPromise = audioRef.current.play();
-    if (playPromise !== undefined) {
-      playPromise.then((audio) => {
-        audioRef.current.play();
-        setIsPlaying(true);
-      });
+    if (initRender.current) {
+      initRender.current = false;
+    } else {
+      console.log("uwe effect from libsong");
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.then((audio) => {
+          audioRef.current.pause();
+          audioRef.current.play();
+          setIsPlaying(true);
+        });
+      }
     }
   }, [currentSong]);
 

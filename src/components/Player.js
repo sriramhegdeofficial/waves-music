@@ -15,8 +15,8 @@ const Player = ({
   songs,
   setCurrentSong,
   setSongs,
-  skipForwardRef,
 }) => {
+  const initRender = React.useRef(true);
   const [songInfo, setSongInfo] = React.useState({
     currentTime: 0,
     duration: 0,
@@ -91,30 +91,41 @@ const Player = ({
   };
 
   React.useEffect(() => {
-    const playPromise = audioRef.current.play();
-    if (playPromise !== undefined) {
-      playPromise.then((audio) => {
-        audioRef.current.play();
-        setIsPlaying(true);
-      });
-    }
-
-    const newSongs = songs.map((listSong) => {
-      if (listSong.id !== currentSong.id) {
-        return {
-          ...listSong,
-          active: false,
-        };
-      } else {
-        return {
-          ...listSong,
-          active: true,
-        };
+    if (initRender.current) {
+      initRender.current = false;
+    } else {
+      console.log("useEffect called");
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then((audio) => {
+            audioRef.current.play();
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            // Auto-play was prevented
+            // Show paused UI.
+            console.log("playback prevented");
+          });
       }
-    });
 
-    setSongs(newSongs);
-  }, [currentSong]);
+      const newSongs = songs.map((listSong) => {
+        if (listSong.id !== currentSong.id) {
+          return {
+            ...listSong,
+            active: false,
+          };
+        } else {
+          return {
+            ...listSong,
+            active: true,
+          };
+        }
+      });
+
+      setSongs(newSongs);
+    }
+  }, [currentSong, audioRef]);
 
   const trackAnim = {
     transform: `translateX(${songInfo.animationPercentage}%)`,
@@ -169,6 +180,8 @@ const Player = ({
         src={currentSong.audio}
         onEnded={songEndHandler}
       ></audio>
+
+      {}
     </div>
   );
 };
