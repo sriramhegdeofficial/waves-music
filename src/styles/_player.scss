@@ -1,0 +1,97 @@
+.player {
+  min-height: 25vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-control {
+  width: 50%;
+  height: 20px;
+  display: flex;
+
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  input {
+    min-width: 100%;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .start-time {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-100%, -55%);
+  }
+
+  .end-time {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(100%, -55%);
+  }
+}
+
+.play-control {
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  svg {
+    cursor: pointer;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+}
+
+.track {
+  background: lightblue;
+  width: 90%;
+  height: 1rem;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.animate-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  background: rgb(204, 204, 204);
+  pointer-events: none;
+  transform: translateX(0%);
+}
+
+@media screen and (max-width: 768px) {
+  .time-control {
+    width: 70%;
+  }
+  .play-control {
+    width: 60%;
+  }
+}
