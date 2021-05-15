@@ -10,6 +10,9 @@ nav {
     padding: 0.65rem 1rem;
     outline: none;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
     &:hover {
       background: rgb(65, 65, 65);
       color: white;

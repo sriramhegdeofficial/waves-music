@@ -87,6 +87,11 @@ input[type="range"]::-moz-range-thumb {
   transform: translateX(0%);
 }
 
+.tap-settings {
+  -webkit-tap-highlight-color: transparent;
+  -moz-tap-highlight-color: transparent;
+}
+
 @media screen and (max-width: 768px) {
   .time-control {
     width: 70%;

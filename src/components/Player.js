@@ -217,19 +217,19 @@ const Player = ({
       </div>
       <div className="play-control">
         <FontAwesomeIcon
-          className="skip-back"
+          className="tap-settings skip-back"
           onClick={() => skipTrackHandler("skip-back")}
           size="2x"
           icon={faAngleLeft}
         />
         <FontAwesomeIcon
           onClick={playSongHandler}
-          className="play"
+          className="tap-settings play"
           size="2x"
           icon={isPlaying ? faPause : faPlay}
         />
         <FontAwesomeIcon
-          className="skip-forward"
+          className="tap-settings skip-forward"
           size="2x"
           icon={faAngleRight}
           onClick={() => skipTrackHandler("skip-forward")}
