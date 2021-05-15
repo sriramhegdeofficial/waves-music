@@ -16,7 +16,7 @@ const Player = ({
   setCurrentSong,
   setSongs,
 }) => {
-  const initRender = React.useRef(true);
+  // const initRender = React.useRef(true);
   const [songInfo, setSongInfo] = React.useState({
     currentTime: 0,
     duration: 0,
@@ -63,54 +63,45 @@ const Player = ({
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  const skipTrackHandler = (direction) => {
+  const skipTrackHandler = async (direction) => {
     //skipForwardRef.current.style.pointerEvents = "none";
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     if (direction === "skip-forward") {
       if (currentIndex === songs.length - 1) {
-        setCurrentSong(songs[0]);
+        await setCurrentSong(songs[0]);
+        await audioRef.current.play();
+        setIsPlaying(true);
       } else {
-        setCurrentSong(songs[currentIndex + 1]);
+        await setCurrentSong(songs[currentIndex + 1]);
+        await audioRef.current.play();
+        setIsPlaying(true);
       }
     } else {
       if (currentIndex === 0) {
-        setCurrentSong(songs[songs.length - 1]);
+        await setCurrentSong(songs[songs.length - 1]);
+        await audioRef.current.play();
+        setIsPlaying(true);
       } else {
-        setCurrentSong(songs[currentIndex - 1]);
+        await setCurrentSong(songs[currentIndex - 1]);
+        await audioRef.current.play();
+        setIsPlaying(true);
       }
+    }
+
+    const playPromise = audioRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.then((audio) => {
+        audioRef.current.play();
+        setIsPlaying(true);
+      });
     }
   };
 
-  const songEndHandler = () => {
+  const songEndHandler = async () => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     if (currentIndex === songs.length - 1) {
-      setCurrentSong(songs[0]);
-    } else {
-      setCurrentSong(songs[currentIndex + 1]);
-    }
-  };
-
-  const playAudioCallback = React.useCallback(() => {
-    if (initRender.current) {
-      initRender.current = false;
-    } else {
-      console.log("useEffect called");
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then((audio) => {
-            audioRef.current.play();
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            // Auto-play was prevented
-            // Show paused UI.
-            console.log("playback prevented");
-          });
-      }
-
       const newSongs = songs.map((listSong) => {
-        if (listSong.id !== currentSong.id) {
+        if (listSong.id !== songs[0].id) {
           return {
             ...listSong,
             active: false,
@@ -124,12 +115,79 @@ const Player = ({
       });
 
       setSongs(newSongs);
-    }
-  });
+      await setCurrentSong(songs[0]);
 
-  React.useEffect(() => {
-    playAudioCallback();
-  }, [playAudioCallback]);
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.then((audio) => {
+          audioRef.current.play();
+          setIsPlaying(true);
+        });
+      }
+    } else {
+      const newSongs = songs.map((listSong) => {
+        if (listSong.id !== songs[currentIndex + 1].id) {
+          return {
+            ...listSong,
+            active: false,
+          };
+        } else {
+          return {
+            ...listSong,
+            active: true,
+          };
+        }
+      });
+
+      setSongs(newSongs);
+      await setCurrentSong(songs[currentIndex + 1]);
+
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.then((audio) => {
+          audioRef.current.play();
+          setIsPlaying(true);
+        });
+      }
+    }
+  };
+
+  // const playAudioCallback = React.useCallback(() => {
+  //   if (initRender.current) {
+  //     initRender.current = false;
+  //   } else {
+  //     console.log("useEffect called");
+  //     const playPromise = audioRef.current.play();
+  //     if (playPromise !== undefined) {
+  //       playPromise
+  //         .then((audio) => {
+  //           audioRef.current.play();
+  //           setIsPlaying(true);
+  //         })
+  //         .catch((error) => {
+  //           // Auto-play was prevented
+  //           // Show paused UI.
+  //           console.log("playback prevented");
+  //         });
+  //     }
+
+  //     const newSongs = songs.map((listSong) => {
+  //       if (listSong.id !== currentSong.id) {
+  //         return {
+  //           ...listSong,
+  //           active: false,
+  //         };
+  //       } else {
+  //         return {
+  //           ...listSong,
+  //           active: true,
+  //         };
+  //       }
+  //     });
+
+  //     setSongs(newSongs);
+  //   }
+  // }, [currentSong]);
 
   const trackAnim = {
     transform: `translateX(${songInfo.animationPercentage}%)`,

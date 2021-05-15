@@ -3,14 +3,14 @@ import React from "react";
 const LibrarySong = ({
   song,
   setCurrentSong,
-  currentSong,
+
   audioRef,
   setIsPlaying,
   songs,
   setSongs,
 }) => {
   const [hovered, setHovered] = React.useState(false);
-  const initRender = React.useRef(true);
+
   const hoverHandler = () => {
     if (song.active) {
       return;
@@ -19,9 +19,16 @@ const LibrarySong = ({
     }
   };
 
-  const songSelectHandler = () => {
-    setCurrentSong(song);
+  const songSelectHandler = async () => {
+    await setCurrentSong(song);
     setHovered(false);
+    const playPromise = audioRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.then((audio) => {
+        audioRef.current.play();
+        setIsPlaying(true);
+      });
+    }
     const newSongs = songs.map((listSong) => {
       if (listSong.id !== song.id) {
         return {
@@ -39,24 +46,18 @@ const LibrarySong = ({
     setSongs(newSongs);
   };
 
-  const playAudioCallback = React.useCallback(() => {
-    if (initRender.current) {
-      initRender.current = false;
-    } else {
-      console.log("uwe effect from libsong");
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.then((audio) => {
-          audioRef.current.play();
-          setIsPlaying(true);
-        });
-      }
-    }
-  });
+  // const playAudioCallback = React.useCallback(() => {
+  //   if (initRender.current) {
+  //     initRender.current = false;
+  //   } else {
+  //     console.log("uwe effect from libsong");
 
-  React.useEffect(() => {
-    playAudioCallback();
-  }, [playAudioCallback]);
+  //   }
+  // }, [audioRef, currentSong]);
+
+  // React.useEffect(() => {
+  //   playAudioCallback();
+  // }, [playAudioCallback]);
 
   return (
     <div
