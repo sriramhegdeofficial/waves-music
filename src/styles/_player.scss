@@ -19,6 +19,8 @@
     -webkit-appearance: none;
     background: transparent;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
   }
   .start-time {
     position: absolute;
